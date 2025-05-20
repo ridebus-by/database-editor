@@ -23,9 +23,9 @@ export function Notifications() {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent side="bottom" align="end" className="p-0 w-[620px] sm:w-[680px]">
+        <PopoverContent side="bottom" align="end" className="p-0 w-[320px] sm:w-[620px] md:w-[680px]">
           {/* Внутри PopoverContent можно прямо вставить NotificationsCard */}
-          <NotificationsCard />
+          <NotificationsCard inPopover={true} />
         </PopoverContent>
       </Popover>
   )

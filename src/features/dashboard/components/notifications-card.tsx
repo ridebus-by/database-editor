@@ -75,7 +75,7 @@ function getNotificationBadge(type: string) {
   }
 }
 
-export function NotificationsCard() {
+export function NotificationsCard({ inPopover = false }: { inPopover?: boolean }) {
   const { notifications, markAllAsRead } = useNotificationsRealtime()
   const [activeTab, setActiveTab] = useState<'all' | 'unread' | 'important'>('all')
   const [userFilter, setUserFilter] = useState<string>('all')
@@ -105,8 +105,8 @@ export function NotificationsCard() {
   ).map(([id, name]) => ({ id, name }))
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
+    <Card className={inPopover ? 'border-0 shadow-none rounded-none' : ''}>
+      <CardHeader className="pb-2 px-4 sm:px-6">
         <div className="flex justify-between items-start">
           <div>
             <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors">
@@ -123,7 +123,7 @@ export function NotificationsCard() {
       </CardHeader>
 
       <CardContent className="p-0">
-        <div className="px-6 py-2 border-b flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-2 border-b flex items-center justify-between">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="all">
@@ -154,7 +154,7 @@ export function NotificationsCard() {
           </Tabs>
         </div>
 
-        <div className="px-6 py-2 border-b flex flex-wrap gap-2 items-center">
+        <div className="px-4 sm:px-6 py-2 border-b flex flex-wrap gap-2 items-center">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Filter className="h-3.5 w-3.5" />
             <span>Фильтры:</span>
@@ -162,7 +162,7 @@ export function NotificationsCard() {
 
           <div className="flex flex-1 flex-wrap gap-2">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="h-8 w-[180px]">
+              <SelectTrigger className="h-8 w-full sm:w-[180px]">
                 <SelectValue placeholder="Тип события" />
               </SelectTrigger>
               <SelectContent>
@@ -175,7 +175,7 @@ export function NotificationsCard() {
             </Select>
 
             <Select value={userFilter} onValueChange={setUserFilter}>
-              <SelectTrigger className="h-8 w-[180px]">
+              <SelectTrigger className="h-8 w-full sm:w-[180px]">
                 <SelectValue placeholder="Пользователь" />
               </SelectTrigger>
               <SelectContent>
@@ -188,7 +188,7 @@ export function NotificationsCard() {
           </div>
         </div>
 
-        <ScrollArea className="h-[350px]">
+        <ScrollArea className="h-[300px] sm:h-[350px]">
           <div className="p-0">
             {filteredNotifications.map(notification => (
               <div
@@ -242,7 +242,7 @@ export function NotificationsCard() {
         </ScrollArea>
       </CardContent>
 
-      <CardFooter className="flex justify-between border-t">
+      <CardFooter className="flex justify-between border-t px-4 sm:px-6">
         <Button
           variant="ghost"
           size="sm"

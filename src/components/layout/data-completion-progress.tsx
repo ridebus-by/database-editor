@@ -4,8 +4,12 @@ import { useStops } from '@/features/stops/context/stops-context'
 import { Route } from '@/features/routes/data/schema'
 import { Stop } from '@/features/stops/data/schema'
 import { Bus, MapPin } from 'lucide-react'
+import { useSidebar } from '@/components/ui/sidebar'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function DataCompletionProgress() {
+  const { state } = useSidebar()
+  const isCollapsed = state === 'collapsed'
   const { routes } = useRoutes()
   const { stops } = useStops()
 
@@ -46,6 +50,42 @@ export function DataCompletionProgress() {
   const stopsCompletionPercentage = stops.length
     ? Math.round((stops.filter(isStopComplete).length / stops.length) * 100)
     : 0
+
+  if (isCollapsed) {
+    return (
+      <TooltipProvider>
+        <div className="px-2 py-2 flex flex-col items-center gap-3">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-full">
+                <div className="flex justify-center mb-1">
+                  <Bus className="h-4 w-4" />
+                </div>
+                <Progress value={routesCompletionPercentage} className="h-1.5 w-full" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Маршруты: {routesCompletionPercentage}%</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-full">
+                <div className="flex justify-center mb-1">
+                  <MapPin className="h-4 w-4" />
+                </div>
+                <Progress value={stopsCompletionPercentage} className="h-1.5 w-full" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Остановки: {stopsCompletionPercentage}%</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </TooltipProvider>
+    )
+  }
 
   return (
     <div className="px-4 py-2 space-y-3">
