@@ -23,16 +23,16 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useUsers } from '../context/users-context'
 import { StaffUser } from '../data/schema'
 import { showSubmittedData } from '@/utils/show-submitted-data'
-import { toast } from 'sonner'
+
 
 // Форма только для полей, существующих в StaffUser
 const formSchema = z.object({
     username: z.string().min(1, { message: 'Username is required.' }),
     iconUrl: z.string().url({ message: 'Icon URL must be valid.' }),
     profileUrl: z.string().url({ message: 'Profile URL must be valid.' }),
+    isEdit: z.boolean()
 })
 
 type UserForm = z.infer<typeof formSchema>

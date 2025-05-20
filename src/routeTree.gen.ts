@@ -21,6 +21,8 @@ import { Route as errors401Import } from './routes/(errors)/401'
 import { Route as authSignInImport } from './routes/(auth)/sign-in'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedUsersIndexImport } from './routes/_authenticated/users/index'
+import { Route as AuthenticatedStopsIndexImport } from './routes/_authenticated/stops/index'
+import { Route as AuthenticatedRoutesIndexImport } from './routes/_authenticated/routes/index'
 import { Route as AuthenticatedSettingsAppearanceImport } from './routes/_authenticated/settings/appearance'
 
 // Create/Update Routes
@@ -83,6 +85,18 @@ const AuthenticatedSettingsRouteRoute = AuthenticatedSettingsRouteImport.update(
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexImport.update({
   id: '/users/',
   path: '/users/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedStopsIndexRoute = AuthenticatedStopsIndexImport.update({
+  id: '/stops/',
+  path: '/stops/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedRoutesIndexRoute = AuthenticatedRoutesIndexImport.update({
+  id: '/routes/',
+  path: '/routes/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -167,6 +181,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceImport
       parentRoute: typeof AuthenticatedSettingsRouteImport
     }
+    '/_authenticated/routes/': {
+      id: '/_authenticated/routes/'
+      path: '/routes'
+      fullPath: '/routes'
+      preLoaderRoute: typeof AuthenticatedRoutesIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/stops/': {
+      id: '/_authenticated/stops/'
+      path: '/stops'
+      fullPath: '/stops'
+      preLoaderRoute: typeof AuthenticatedStopsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
@@ -196,12 +224,16 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedRoutesIndexRoute: typeof AuthenticatedRoutesIndexRoute
+  AuthenticatedStopsIndexRoute: typeof AuthenticatedStopsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedRoutesIndexRoute: AuthenticatedRoutesIndexRoute,
+  AuthenticatedStopsIndexRoute: AuthenticatedStopsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 
@@ -219,6 +251,8 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/routes': typeof AuthenticatedRoutesIndexRoute
+  '/stops': typeof AuthenticatedStopsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 
@@ -232,6 +266,8 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/routes': typeof AuthenticatedRoutesIndexRoute
+  '/stops': typeof AuthenticatedStopsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 
@@ -247,6 +283,8 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/routes/': typeof AuthenticatedRoutesIndexRoute
+  '/_authenticated/stops/': typeof AuthenticatedStopsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 
@@ -263,6 +301,8 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/settings/appearance'
+    | '/routes'
+    | '/stops'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -275,6 +315,8 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/settings/appearance'
+    | '/routes'
+    | '/stops'
     | '/users'
   id:
     | '__root__'
@@ -288,6 +330,8 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/routes/'
+    | '/_authenticated/stops/'
     | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
@@ -336,6 +380,8 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/settings",
         "/_authenticated/",
+        "/_authenticated/routes/",
+        "/_authenticated/stops/",
         "/_authenticated/users/"
       ]
     },
@@ -371,6 +417,14 @@ export const routeTree = rootRoute
     "/_authenticated/settings/appearance": {
       "filePath": "_authenticated/settings/appearance.tsx",
       "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/routes/": {
+      "filePath": "_authenticated/routes/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/stops/": {
+      "filePath": "_authenticated/stops/index.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/users/": {
       "filePath": "_authenticated/users/index.tsx",

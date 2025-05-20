@@ -14,8 +14,6 @@ import { ThemeProvider } from './context/theme-context'
 import './index.css'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
-import { AuthProvider } from './context/auth-context'
-import { SidebarProvider } from './components/ui/sidebar'
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -83,9 +81,7 @@ if (!rootElement.innerHTML) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
           <FontProvider>
-            <RouterProvider router={router}>
-              <AuthProvider />
-            </RouterProvider>
+            <RouterProvider router={router} />
           </FontProvider>
         </ThemeProvider>
       </QueryClientProvider>

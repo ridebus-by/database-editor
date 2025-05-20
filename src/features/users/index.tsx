@@ -9,30 +9,33 @@ import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersTable } from './components/users-table'
 import UsersProvider, { useUsers } from './context/users-context'
 import { staffListSchema as userListSchema } from './data/schema'
+import { Skeleton } from '@/components/ui/skeleton'
+import { IconMoodSad2 } from '@tabler/icons-react'
+import { Notifications } from '@/components/notifications'
 
 export default function Users() {
-    return (
-      <UsersProvider>
-        <InnerUsers />
-      </UsersProvider>
-    )
-  }
+  return (
+    <UsersProvider>
+      <InnerUsers />
+      <UsersDialogs />
+    </UsersProvider>
+  )
+}
 
-  function InnerUsers() {
+function InnerUsers() {
   // Parse user list
   const { users, loading, error } = useUsers()
 
-  if (loading) return <div className="p-4">Загрузка пользователей…</div>
-  if (error)   return <div className="p-4 text-red-600">Ошибка: {error.message}</div>
-
-  // Валидируем через Zod
-  const userList = userListSchema.parse(users)
+  const userList = !loading && !error
+    ? userListSchema.parse(users)
+    : []
 
   return (
     <>
       <Header fixed>
         <Search />
         <div className='ml-auto flex items-center space-x-4'>
+          <Notifications />
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
@@ -48,12 +51,31 @@ export default function Users() {
           </div>
           <UsersPrimaryButtons />
         </div>
+
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+          {loading ? (
+            <div className="w-full space-y-2">
+              <Skeleton className="h-8 w-1/3" />
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          ) : error ? (
+          <div className='h-svh'>
+            <div className='m-auto flex h-150 w-full flex-col items-center justify-center gap-2'>
+              <IconMoodSad2 size={72} />
+              <span className='text-4xl leading-tight font-bold'>Произошла ошибка</span>
+              <p className='text-muted-foreground text-center'>
+                {error.message} <br />
+                Обратитесь к администратору для решения проблемы
+              </p>
+            </div>
+          </div>
+          ) : (
           <UsersTable data={userList} columns={columns} />
+          )}
         </div>
       </Main>
-
-      <UsersDialogs />
     </>
   )
 }

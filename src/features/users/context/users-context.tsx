@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
-import { User } from '../data/schema'
+import { StaffUser } from '../data/schema'
 import { fetchUsers } from '../data/users'
 
 type UsersDialogType = 'invite' | 'add' | 'edit' | 'delete'
@@ -8,9 +8,9 @@ type UsersDialogType = 'invite' | 'add' | 'edit' | 'delete'
 interface UsersContextType {
   open: UsersDialogType | null
   setOpen: (str: UsersDialogType | null) => void
-  currentRow: User | null
-  setCurrentRow: React.Dispatch<React.SetStateAction<User | null>>
-  users: User[]
+  currentRow: StaffUser | null
+  setCurrentRow: React.Dispatch<React.SetStateAction<StaffUser | null>>
+  users: StaffUser[]
   loading: boolean
   error: Error | null
 }
@@ -23,8 +23,8 @@ interface Props {
 
 export default function UsersProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<UsersDialogType>(null)
-  const [currentRow, setCurrentRow] = useState<User | null>(null)
-  const [users, setUsers] = useState<User[]>([])
+  const [currentRow, setCurrentRow] = useState<StaffUser | null>(null)
+  const [users, setUsers] = useState<StaffUser[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<Error | null>(null)
 

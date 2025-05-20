@@ -1,4 +1,4 @@
-import ViteLogo from '@/assets/react.svg'
+import RideBusLogo from '@/assets/ridebus.svg'
 import { UserAuthForm } from './components/user-auth-form'
 
 export default function SignIn() {
@@ -23,21 +23,19 @@ export default function SignIn() {
         </div>
 
         <img
-          src={ViteLogo}
+          src={RideBusLogo}
           className='relative m-auto'
           width={301}
           height={60}
-          alt='Vite'
+          alt='RideBus'
         />
 
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
             <p className='text-lg'>
-              &ldquo;This template has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
+              &ldquo;We need to complete the schedule first before we can do the other functions of the app.&rdquo;
             </p>
-            <footer className='text-sm'>John Doe</footer>
+            <footer className='text-sm'>Artsemii Lapshin</footer>
           </blockquote>
         </div>
       </div>

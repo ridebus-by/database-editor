@@ -1,12 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
-import { callTypes, userTypes } from '../data/data'
 import { StaffUser } from '../data/schema'
-import { DataTableColumnHeader } from './data-table-column-header'
-import { DataTableRowActions } from './data-table-row-actions'
+import { DataTableColumnHeader } from '../../../components/data-table-column-header'
+import { DataTableRowActions } from './users-table-row-actions'
 
 export const columns: ColumnDef<StaffUser>[] = [
   {

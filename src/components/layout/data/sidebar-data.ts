@@ -2,6 +2,8 @@ import {
     IconBarrierBlock,
     IconBrowserCheck,
     IconBug,
+    IconBus,
+    IconBusStop,
     IconChecklist,
     IconError404,
     IconHelp,
@@ -9,9 +11,11 @@ import {
     IconLock,
     IconLockAccess,
     IconMessages,
+    IconNavigation,
     IconNotification,
     IconPackages,
     IconPalette,
+    IconRoute,
     IconServerOff,
     IconSettings,
     IconTool,
@@ -27,18 +31,8 @@ import {
       {
         name: 'RideBus DE',
         logo: BusFront,
-        plan: 'Vite + ShadcnUI',
-      },
-      {
-        name: 'Acme Inc',
-        logo: GalleryVerticalEnd,
-        plan: 'Enterprise',
-      },
-      {
-        name: 'Acme Corp.',
-        logo: AudioWaveform,
-        plan: 'Startup',
-      },
+        plan: 'Internal use only',
+      }
     ],
     navGroups: [
       {
@@ -50,20 +44,14 @@ import {
             icon: IconLayoutDashboard,
           },
           {
-            title: 'Tasks',
-            url: '/tasks',
-            icon: IconChecklist,
+            title: 'Routes',
+            url: '/routes',
+            icon: IconRoute,
           },
           {
-            title: 'Apps',
-            url: '/apps',
-            icon: IconPackages,
-          },
-          {
-            title: 'Chats',
-            url: '/chats',
-            badge: '3',
-            icon: IconMessages,
+            title: 'Stops',
+            url: '/stops',
+            icon: IconBusStop,
           },
           {
             title: 'Users',
@@ -72,7 +60,7 @@ import {
           },
         ],
       },
-      {
+      /* {
         title: 'Pages',
         items: [
           {
@@ -133,7 +121,7 @@ import {
             ],
           },
         ],
-      },
+      }, */
       {
         title: 'Other',
         items: [

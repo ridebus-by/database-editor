@@ -8,33 +8,38 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useUsers } from '../context/users-context'
+import { StaffUser } from '../data/schema'
 
-export function UsersDeleteDialog() {
-  const { open, setOpen, currentRow } = useUsers()
+interface Props {
+    currentRow?: StaffUser
+    open: boolean
+    onOpenChange: (open: boolean) => void
+}
+
+export function UsersDeleteDialog({ currentRow, open, onOpenChange }: Props) {
   const [value, setValue] = useState('')
 
   useEffect(() => {
     if (!open) setValue('')
   }, [open])
 
-  if (open !== 'delete' || !currentRow) return null
+  if (open !== !currentRow) return null
 
   const handleConfirm = async () => {
-    if (value.trim() !== currentRow.username) return
+    if (value.trim() !== currentRow?.username) return
     // удаляем из Firebase
     await remove(ref(db, `staff/${currentRow.id}`))
-    setOpen(null)
+    onOpenChange(false)
   }
 
   return (
     <ConfirmDialog
       open={true}
       onOpenChange={(isOpen) => {
-        if (!isOpen) setOpen(null)
+        if (!isOpen) onOpenChange(isOpen)
       }}
       handleConfirm={handleConfirm}
-      disabled={value.trim() !== currentRow.username}
+      disabled={value.trim() !== currentRow?.username}
       title={
         <span className="text-destructive">
           <IconAlertTriangle size={18} className="stroke-destructive mr-1 inline-block" />
@@ -45,7 +50,7 @@ export function UsersDeleteDialog() {
         <div className="space-y-4">
           <p className="mb-2">
             Are you sure you want to delete{' '}
-            <span className="font-bold">{currentRow.username}</span>?
+            <span className="font-bold">{currentRow?.username}</span>?
             <br />This action cannot be undone.
           </p>
           <Label className="my-2">
