@@ -16,15 +16,17 @@ export function DataCompletionProgress() {
   // Функция для проверки заполненности полей маршрута
   const isRouteComplete = (r: Route): boolean => {
     return (
-      typeof r.id === 'string' &&
-      typeof r.number === 'string' &&
-      typeof r.title === 'string' &&
-      typeof r.fare === 'string' &&
-      Array.isArray(r.departureTimes) &&
-      r.departureTimes.length >= 0 &&
-      Array.isArray(r.intervalBetweenStops) &&
-      Array.isArray(r.stops) &&
-      r.stops.length >= 0
+      typeof r.id === 'string' && r.id.trim() !== '' &&
+      typeof r.number === 'string' && r.number.trim() !== '' &&
+      typeof r.title === 'string' && r.title.trim() !== '' &&
+      typeof r.carrierCompany === 'string' && r.carrierCompany.trim() !== '' &&
+      typeof r.description === 'string' && r.description.trim() !== '' &&
+      typeof r.fare === 'string' && r.fare.trim() !== '' &&
+      typeof r.cityId === 'number' &&
+      typeof r.typeId === 'string' && r.typeId.trim() !== '' &&
+      Array.isArray(r.departureTimes) && r.departureTimes.length > 0 &&
+      Array.isArray(r.intervalBetweenStops) && r.intervalBetweenStops.length > 0 &&
+      Array.isArray(r.stops) && r.stops.length > 0
     )
   }
 
