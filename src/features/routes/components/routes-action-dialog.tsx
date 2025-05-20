@@ -103,7 +103,7 @@ function StopsSelectorDialog({
     onClose,
 }: {
     open: boolean
-    stopsOptions: { id: string; name: string }[]
+    stopsOptions: { id: string; name: string; direction: string }[]
     selected: string[]
     onChange: (ids: string[]) => void
     onClose: () => void
@@ -134,7 +134,7 @@ function StopsSelectorDialog({
                                     )
                                 }}
                             />
-                            <span className="ml-2">{stop.name}</span>
+                            <span className="ml-2">{stop.name} - {stop.direction}</span>
                         </div>
                     ))}
                 </div>
@@ -161,7 +161,7 @@ export function RoutesActionDialog({ currentRow, open, onOpenChange }: Props) {
     const [cities, setCities] = useState<{ id: string; name: string }[]>([])
     const [sizes, setSizes] = useState<{ id: string; name: string }[]>([])
     const [types, setTypes] = useState<{ id: string; name: string }[]>([])
-    const [stopsOptions, setStopsOptions] = useState<{ id: string; name: string }[]>([])
+    const [stopsOptions, setStopsOptions] = useState<{ id: string; name: string; direction: string }[]>([])
     const [stopsDialog, setStopsDialog] = useState(false)
 
     const form = useForm<RouteForm>({
@@ -234,6 +234,7 @@ export function RoutesActionDialog({ currentRow, open, onOpenChange }: Props) {
                 Object.values(obj).map((v: any) => ({
                     id: v.id ?? v.key,
                     name: v.name ?? v.title ?? v.number,
+                    direction: v.direction
                 }))
             )
         }
