@@ -9,7 +9,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { child, get, ref } from "firebase/database";
 import { db } from "@/lib/firebase";
@@ -17,6 +17,8 @@ import { SelectDropdown } from "@/components/select-dropdown";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 export const formSchema = z
     .object({
@@ -109,10 +111,36 @@ function StopsSelectorDialog({
     onClose: () => void
 }) {
     const [local, setLocal] = useState<string[]>(selected)
+    const [searchQuery, setSearchQuery] = useState<string>("")
 
     useEffect(() => {
         setLocal(selected)
     }, [selected])
+
+    // Фильтрация остановок на основе поискового запроса
+    const filteredStops = useMemo(() => {
+        if (!searchQuery.trim()) return stopsOptions;
+        
+        const query = searchQuery.toLowerCase().trim();
+        return stopsOptions.filter(
+            (stop) => 
+                stop.name.toLowerCase().includes(query) || 
+                (stop.direction && stop.direction.toLowerCase().includes(query))
+        );
+    }, [stopsOptions, searchQuery]);
+
+    // Получение информации о выбранных остановках для отображения в Badge
+    const selectedStops = useMemo(() => {
+        return local.map(id => {
+            const stop = stopsOptions.find(s => s.id === id);
+            return stop ? { id, name: stop.name, direction: stop.direction } : null;
+        }).filter(Boolean) as { id: string; name: string; direction: string }[];
+    }, [local, stopsOptions]);
+
+    // Удаление остановки из выбранных
+    const removeStop = (id: string) => {
+        setLocal(prev => prev.filter(stopId => stopId !== id));
+    };
 
     return (
         <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -121,23 +149,62 @@ function StopsSelectorDialog({
                     <DialogTitle>Выберите остановки</DialogTitle>
                     <DialogDescription>Отметьте все остановки, которые входят в маршрут</DialogDescription>
                 </DialogHeader>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {stopsOptions.map((stop) => (
-                        <div key={stop.id} className="flex items-center">
-                            <Checkbox
-                                checked={local.includes(stop.id)}
-                                onCheckedChange={(c) => {
-                                    setLocal((prev) =>
-                                        c
-                                            ? [...prev, stop.id]
-                                            : prev.filter((id) => id !== stop.id)
-                                    )
-                                }}
-                            />
-                            <span className="ml-2">{stop.name} - {stop.direction}</span>
-                        </div>
-                    ))}
+                
+                {/* Строка поиска */}
+                <div className="mb-4">
+                    <Input
+                        placeholder="Поиск остановок..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full"
+                    />
                 </div>
+                
+                {/* Отображение выбранных остановок */}
+                {selectedStops.length > 0 && (
+                    <div className="mb-4 flex flex-wrap gap-2">
+                        {selectedStops.map((stop) => (
+                            <Badge 
+                                key={stop.id} 
+                                variant="secondary"
+                                className="flex items-center gap-1 py-1"
+                            >
+                                {stop.name}
+                                {stop.direction && ` - ${stop.direction}`}
+                                <X 
+                                    className="h-3 w-3 cursor-pointer" 
+                                    onClick={() => removeStop(stop.id)}
+                                />
+                            </Badge>
+                        ))}
+                    </div>
+                )}
+                
+                {/* Список остановок */}
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {filteredStops.length > 0 ? (
+                        filteredStops.map((stop) => (
+                            <div key={stop.id} className="flex items-center">
+                                <Checkbox
+                                    checked={local.includes(stop.id)}
+                                    onCheckedChange={(c) => {
+                                        setLocal((prev) =>
+                                            c
+                                                ? [...prev, stop.id]
+                                                : prev.filter((id) => id !== stop.id)
+                                        )
+                                    }}
+                                />
+                                <span className="ml-2">{stop.name} - {stop.direction}</span>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-2 text-muted-foreground">
+                            Остановки не найдены
+                        </div>
+                    )}
+                </div>
+                
                 <DialogFooter>
                     <Button
                         onClick={() => {
@@ -256,7 +323,10 @@ export function RoutesActionDialog({ currentRow, open, onOpenChange }: Props) {
                 intervalBetweenStops: stringToArray<number>(values.intervalBetweenStops, 'number'),
                 
                 // Преобразуем cityId из строки в число
-                cityId: Number(values.cityId)
+                cityId: Number(values.cityId),
+                
+                // Убедимся, что stops - это массив
+                stops: Array.isArray(values.stops) ? values.stops : []
             };
             
             if (isEdit && currentRow) {
